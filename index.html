@@ -92,6 +92,7 @@
     -webkit-text-fill-color: transparent;
     margin-bottom: 0.3rem;
   }
+  #userName { cursor: pointer; }
   .date {
     font-size: 0.9rem;
     color: var(--text-muted);
@@ -366,7 +367,7 @@
 <div class="container">
   <div class="header">
     <div class="greeting">Hydratation quotidienne</div>
-    <h1>Bonjour Thibaut</h1>
+    <h1>Bonjour <span id="userName" title="Toucher pour changer le prénom">…</span></h1>
     <div class="date" id="date"></div>
   </div>
 
@@ -489,7 +490,7 @@ const messages = [
   "🔥 5 verres : excellent, plus que 3",
   "🎯 6 verres : la ligne d'arrivée est proche",
   "🏆 7 verres : encore un effort, tu y es presque !",
-  "👑 Objectif atteint ! Bravo Thibaut, 2L hydratés ✨"
+  "👑 Objectif atteint ! Bravo {name}, 2L hydratés ✨"
 ];
 
 function render() {
@@ -510,7 +511,8 @@ function render() {
   
   document.getElementById('water').style.height = pct + '%';
   
-  document.getElementById('message').textContent = messages[Math.min(currentCount, messages.length - 1)];
+  const rawMsg = messages[Math.min(currentCount, messages.length - 1)];
+  document.getElementById('message').textContent = rawMsg.replace('{name}', getUserName());
   
   renderHistory();
 }
@@ -601,8 +603,44 @@ function showToast(msg) {
   window.toastTimeout = setTimeout(() => toast.classList.remove('show'), 2500);
 }
 
+const NAME_KEY = 'hydratation_user_name';
+
+function getUserName() {
+  try {
+    return localStorage.getItem(NAME_KEY) || '';
+  } catch (e) {
+    return '';
+  }
+}
+
+function setUserName(name) {
+  try {
+    localStorage.setItem(NAME_KEY, name);
+  } catch (e) {}
+  document.getElementById('userName').textContent = name;
+  render();
+}
+
+function askUserName(force) {
+  const current = getUserName();
+  if (current && !force) {
+    document.getElementById('userName').textContent = current;
+    return;
+  }
+  const input = prompt('Quel est ton prénom ?', current || '');
+  const trimmed = (input || '').trim();
+  if (trimmed) {
+    setUserName(trimmed);
+  } else if (!current) {
+    document.getElementById('userName').textContent = 'toi';
+  }
+}
+
+document.getElementById('userName').addEventListener('click', () => askUserName(true));
+
 createBubbles();
 setDate();
+askUserName(false);
 loadToday();
 
 if ('serviceWorker' in navigator) {

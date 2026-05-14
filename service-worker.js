@@ -1,4 +1,4 @@
-const CACHE = 'dailywater-v1';
+const CACHE = 'dailywater-v2';
 const ASSETS = [
   './',
   './index.html',
