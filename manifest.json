@@ -1,0 +1,20 @@
+{
+  "name": "DailyWater · Hydratation",
+  "short_name": "Hydratation",
+  "description": "Suivi quotidien de l'hydratation pendant le jeûne intermittent",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a1628",
+  "theme_color": "#0a1628",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
